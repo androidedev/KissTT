@@ -1,0 +1,352 @@
+﻿<Window x:Class="ktt3.kttA"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="kttA" Height="800" Width="1400"
+        Loaded="Window_Loaded"
+        Background="Black"
+        xmlns:local="clr-namespace:ktt3"        
+        xmlns:tb="http://www.hardcodet.net/taskbar" 
+        StateChanged="Window_StateChanged"
+        PreviewKeyDown="Window_PreviewKeyDown">
+    <Window.Resources>
+        <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                 Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <local:TimeConverter x:Key="TimeConverter" x:Name="TimeConverter"></local:TimeConverter>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <local:ShowWindowCommand x:Key="ShowWindowCommand" />
+        </Grid.Resources>
+
+        <tb:TaskbarIcon 
+            x:Name="MyNotifyIcon" 
+            IconSource="Resources/png16/clock2.ico" 
+            ToolTipText="" 
+            LeftClickCommand="{StaticResource ShowWindowCommand}"
+            LeftClickCommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            DoubleClickCommand="{StaticResource ShowWindowCommand}"
+            DoubleClickCommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            Grid.ColumnSpan="2"/>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Label Height="40" x:Name="lbTimer" Content="00:00:00" VerticalAlignment="Center" FontSize="36" Margin="10,0,0,0" Foreground="White" FontWeight="Bold" FontFamily="Courier New" Background="Black"  />
+            <Button x:Name="ButtonPlay" VerticalAlignment="Center" Margin="10,8,0,0" HorizontalAlignment="Left" Height="36" Width="36" Click="ButtonPlay_Click" >
+                <StackPanel>
+                    <Image Width="32" Height="32" Source=".\Resources\png32\022-play-button.png" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="ButtonPause" VerticalAlignment="Center" Margin="10,8,0,0" HorizontalAlignment="Left" Height="36" Width="36" Click="ButtonPause_Click" >
+                <StackPanel>
+                    <Image Width="32" Height="32" Source=".\Resources\png32\023-pause.png" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="ButtonStop" VerticalAlignment="Center" Margin="10,8,0,0" HorizontalAlignment="Left" Height="36" Width="36" Click="ButtonStop_Click" >
+                <StackPanel>
+                    <Image Width="32" Height="32" Source=".\Resources\png32\024-stop.png" />
+                </StackPanel>
+            </Button>
+            <TextBox FontSize="32" Background="Black" x:Name="currentTaskTextBox" Margin="10,0,0,0" IsReadOnly="True" Text="" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"></TextBox>
+        </StackPanel>
+
+        <Grid Grid.Row="2" x:Name="GridContents" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="54" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="600" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel x:Name="StackPanelButtons" Grid.Column="0" Margin="0,0,0,0" Width="52" HorizontalAlignment="Left" Background="Black">
+                <ToggleButton x:Name="ToggleButtonProjects" Margin="2,2,2,2" VerticalAlignment="Top" Width="48" Height="48" HorizontalContentAlignment="Center" Click="ToggleButtonProjects_Click" IsChecked="True"  >
+                    <StackPanel>
+                        <Image Width="32" Height="32" Source=".\Resources\png32\001-three.png" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton x:Name="ToggleButtonTasks" Margin="2,2,2,2" VerticalAlignment="Top" Width="48" Height="48" HorizontalContentAlignment="Center" Click="ToggleButtonTasks_Click" IsChecked="True" >
+                    <StackPanel>
+                        <Image Width="32" Height="32" Source=".\Resources\png32\016-interface-1.png" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton x:Name="ToggleButtonTimeTracks" Margin="2,2,2,2" VerticalAlignment="Top" Width="48" Height="48" HorizontalContentAlignment="Center" Click="ToggleButtonTimeTracks_Click" IsChecked="True" >
+                    <StackPanel>
+                        <Image Width="32" Height="32" Source=".\Resources\png32\013-time-1.png" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton x:Name="ToggleButtonSettings" Margin="2,2,2,2" VerticalAlignment="Top" Width="48" Height="48" HorizontalContentAlignment="Center" Click="ToggleButtonSettings_Click">
+                    <StackPanel>
+                        <Image Width="32" Height="32" Source=".\Resources\png32\015-cogwheel-1.png" />
+                    </StackPanel>
+                </ToggleButton>
+            </StackPanel>
+
+            <!--Settings Panel-->
+            <StackPanel  Grid.Column="1" x:Name="StackPanelSettings" Orientation="Vertical" Margin="0,0,0,0" Width="200">
+                <StackPanel>
+                    <TextBlock Foreground="White" FontSize="24" Margin="8,0,0,0">Settings</TextBlock>
+                </StackPanel>
+                <Separator Margin="4,2,2,4" />
+                <StackPanel Orientation="Horizontal" Margin="2,16,0,0">
+                    <Label Grid.Row="0" Grid.Column="0" Content="Work time (min.)" Foreground="White" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Black" />
+                    <TextBox x:Name="workTimeTextBox"  VerticalAlignment="Center" HorizontalAlignment="Left" Width="64" Height="26" VerticalContentAlignment="Center" Text="{Binding WorkTimeLen}" />
+                </StackPanel>
+                <Separator Margin="4,16,2,4" />
+                <StackPanel Margin="8,16,0,0">
+                    <CheckBox x:Name="soundCheck" Content="Sound enabled" IsChecked="{Binding SoundEffects}" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+                    <CheckBox x:Name="backCheck" Content="Count Backward" IsChecked="{Binding CountBackwards}" Foreground="White" FontSize="12" />
+                </StackPanel>
+                <Separator Margin="4,16,2,4" />
+                <StackPanel Margin="8,16,0,0">
+                    <CheckBox x:Name="CheckBoxAllowFreeTimer" Content="Allow timer without selected Job" IsChecked="{Binding AllowFreeTimer}" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+                </StackPanel>
+                <Separator Margin="4,16,2,4" />
+                <StackPanel Margin="8,16,0,0">
+                    <CheckBox x:Name="CheckBoxCascadeProjects" Content="Confirm delete projects" IsChecked="{Binding ConfirmDeleteProjects}" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+                    <CheckBox x:Name="CheckBoxCascadeJobs" Content="Confirm delete jobs" IsChecked="{Binding ConfirmDeleteJobs}" Foreground="White" FontSize="12" />
+                </StackPanel>
+                <Separator Margin="4,16,2,4" />
+                <StackPanel Margin="8,16,0,0">
+                    <CheckBox x:Name="CheckBoxTray" Content="Minimize to tray" IsChecked="{Binding MinimizeToTray}" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+                </StackPanel>
+                <Separator Margin="4,16,2,4" />
+                <Button Content="Export and Import..." x:Name="ButtonExport" Margin="2,2,2,2" VerticalAlignment="Top" Width="150" Height="36" Click="ButtonExport_Click" >
+                </Button>
+                <Separator Margin="4,16,2,4" />
+                <StackPanel Margin="8,16,0,0" VerticalAlignment="Bottom">
+                    <Separator Margin="4,2,2,4" />
+                    <!--<TextBlock Foreground="White" Margin="8,0,0,0">CTRL+A in grids to select <LineBreak /> records by keyboard</TextBlock>-->
+                    <TextBlock Foreground="White" Margin="8,0,0,0">CTRL+P : Projects</TextBlock>
+                    <TextBlock Foreground="White" Margin="8,0,0,0">CTRL+J : Jobs</TextBlock>
+                    <TextBlock Foreground="White" Margin="8,0,0,0">CTRL+T : TimeTracks</TextBlock>
+                    <TextBlock Foreground="White" Margin="8,0,0,0">CTRL+S : Settings</TextBlock>
+                    <TextBlock Foreground="White" Margin="8,0,0,0">CTRL+E : Export / Import</TextBlock>
+                    <TextBlock Foreground="White" Margin="8,0,0,0"></TextBlock>
+                    <TextBlock Foreground="White" Margin="8,0,0,0">CTRL+Left : Start timetrack</TextBlock>
+                    <TextBlock Foreground="White" Margin="8,0,0,0">CTRL+Down : Pause timetrack</TextBlock>
+                    <TextBlock Foreground="White" Margin="8,0,0,0">CTRL+Right : Stop timetrack</TextBlock>
+                </StackPanel>
+            </StackPanel>
+
+            <!--Projects panel-->
+            <StackPanel x:Name="StackPanelProjects" Orientation="Vertical"  Margin="0,0,0,0" Grid.Column="2">
+                <DockPanel Height="{Binding ActualHeight, ElementName=StackPanelProjects}" Width="Auto" LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <TextBlock Foreground="White" FontSize="24" Margin="8,0">Projects</TextBlock>
+                    </StackPanel>
+                    <Separator Margin="4,2,8,2" DockPanel.Dock="Top" />
+                    <StackPanel DockPanel.Dock="Top" Height="40" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,0,4,0" >
+                        <TextBox x:Name="ProjectFilterTextBox" MaxLength="50" Height="Auto" Margin="4,2,2,2"  TextWrapping="Wrap" Text="{Binding Path=ProjectViewModel.FilterProjectString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                        <Button Command="{Binding Path=ProjectViewModel.CreateProjectCommand}" CommandParameter="{Binding Path=ProjectViewModel.FilterProjectString}" x:Name="btnCreateProject" Margin="2,2,2,2" VerticalAlignment="Top" Width="36" Height="36" >
+                            <StackPanel>
+                                <Image Width="32" Height="32" Source=".\Resources\png32\025-plus.png" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="ButtonDeleteProject" Margin="2,2,2,0" VerticalAlignment="Top" Width="36" Height="36" Click="ButtonDeleteProject_Click" >
+                            <StackPanel>
+                                <Image Width="32" Height="32" Source=".\Resources\png32\020-minus.png" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="ButtonEditProject" Command="{Binding Path=ProjectViewModel.CancelProjectCommand}" Margin="2,2,2,2" VerticalAlignment="Top" Width="36" Height="36" Click="ButtonEditProject_Click" >
+                            <StackPanel>
+                                <Image Width="32" Height="32" Source=".\Resources\png32\001-pen.png" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <Separator Margin="4,2,2,4" DockPanel.Dock="Top" Visibility="{Binding Visibility, ElementName=EditProjectPanel}" />
+                    <StackPanel x:Name="EditProjectPanel" DockPanel.Dock="Top" Width="Auto" Height="40" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,0,4,0" >
+                        <TextBox x:Name="ProjectEditTextBox" MaxLength="50" Height="Auto" Margin="4,2,2,2" TextWrapping="Wrap" Text="{Binding Path=ProjectViewModel.SelectedProject.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150" HorizontalAlignment="Left"/>
+                        <Button Command="{Binding Path=ProjectViewModel.ModifyProjectCommand}" CommandParameter="{Binding Path=ProjectViewModel.SelectedProject}" x:Name="ButtonSaveEditProject" Margin="2,2,2,2" VerticalAlignment="Top" Width="36" Height="36" Click="ButtonSaveEditProject_Click" >
+                            <StackPanel>
+                                <Image Width="32" Height="32" Source=".\Resources\png32\019-success.png" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding Path=ProjectViewModel.CancelProjectCommand}" x:Name="ButtonCancelEditProject" Margin="2,2,2,2" VerticalAlignment="Top" Width="36" Height="36" Click="ButtonCancelEditProject_Click" >
+                            <StackPanel>
+                                <Image Width="32" Height="32" Source=".\Resources\png32\021-cancel.png" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <ListView x:Name="ProjectsListView"  
+                              Background="#FF2D2D30" ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                              VerticalContentAlignment="Stretch" 
+                              ItemsSource="{Binding ProjectViewModel.Projects}" 
+                              IsSynchronizedWithCurrentItem="True" 
+                              BorderBrush="#FF2D2D30" Margin="4,0,2,4">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Path=ProjectID}" />
+                                    <TextBlock Text=": " />
+                                    <TextBlock Text="{Binding Path=Name}" />
+                                    <TextBlock Text=" (w:" />
+                                    <TextBlock Text="{Binding Path=WorkedTime}" />
+                                    <TextBlock Text="/e:" />
+                                    <TextBlock Text="{Binding Path=EstimatedTime}" />
+                                    <TextBlock Text=")" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DockPanel>
+            </StackPanel>
+            <GridSplitter  x:Name="SplitterProjects" Grid.Column="2" Width="4" HorizontalAlignment="Right" Background="#FFD4D4D4" Foreground="#FFF0F0F0" />
+
+            <!--Jobs(tasks) panel-->
+            <StackPanel x:Name="StackPanelJobs" Orientation="Vertical" Grid.Column="3" Margin="0,0,0,0" >
+                <DockPanel Height="{Binding ActualHeight, ElementName=StackPanelJobs}" Width="Auto" LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <TextBlock Foreground="White" FontSize="24" Margin="8,0">Tasks</TextBlock>
+                        <TextBlock Foreground="White" Margin="0,0" VerticalAlignment="Center">(</TextBlock>
+                        <Label Content="{Binding ProjectViewModel.SelectedProject.Name}" Margin="0,0,0,0" VerticalContentAlignment="Center" Background="{x:Null}" VerticalAlignment="Center"/>
+                        <TextBlock Foreground="White" Margin="0,0" VerticalAlignment="Center">)</TextBlock>
+                    </StackPanel>
+                    <Separator Margin="4,2,8,2" DockPanel.Dock="Top" />
+                    <StackPanel DockPanel.Dock="Top" Width="Auto" Height="40" Orientation="Horizontal" VerticalAlignment="Top" >
+                        <TextBox x:Name="JobFilterStatusTextBox" MaxLength="1" Height="Auto" Margin="4,2,10,2"  TextWrapping="Wrap" Text="{Binding Path=JobViewModel.FilterJobStatusString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                        <TextBox x:Name="JobFilterTextBox" MaxLength="500" Height="Auto" Margin="4,2,2,2"  TextWrapping="Wrap" Text="{Binding Path=JobViewModel.FilterJobString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="516" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                        <Button Command="{Binding Path=JobViewModel.CreateJobCommand}" CommandParameter="{Binding Path=JobViewModel.FilterJobString}" x:Name="btnCreateJob" Margin="2,2,2,2" VerticalAlignment="Top" Width="36" Height="36">
+                            <StackPanel>
+                                <Image Width="32" Height="32" Source=".\Resources\png32\025-plus.png" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <DataGrid x:Name="DataGridTasks"
+                              VerticalContentAlignment="Stretch" 
+                              ItemsSource="{Binding JobViewModel.Editablejobs, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True}"
+                              IsSynchronizedWithCurrentItem="True"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CellEditEnding="DataGridTasks_CellEditEnding"
+                              SelectionMode="Single"
+                              SelectionUnit="FullRow"
+                              HeadersVisibility="All"
+                              CanUserResizeRows="False"
+                              EnableRowVirtualization="False"
+                              EnableColumnVirtualization="False"
+                              PreviewKeyDown="DataGridTasks_PreviewKeyDown"
+                              GridLinesVisibility="Vertical">
+                        <DataGrid.RowHeaderStyle>
+                            <Style TargetType="{x:Type DataGridRowHeader}">
+                                <Setter Property="Content" Value=">" />
+                                <!--<Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Path=Background}" />-->
+                            </Style>
+                        </DataGrid.RowHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="idColumn" Binding="{Binding JobID}" Header="Id" Width="48" Visibility="Visible" IsReadOnly="True" />
+                            <DataGridTextColumn x:Name="priorityColumn" Binding="{Binding Priority}" Header="Prior." Width="44" Visibility="Visible" />
+                            <DataGridTextColumn x:Name="estimatedTimeColumn" Binding="{Binding EstimatedTime, TargetNullValue='', UpdateSourceTrigger=LostFocus}" Header="E.Time" Width="60"/>
+                            <DataGridTextColumn x:Name="workedTimeColumn" Binding="{Binding WorkedTime}" Header="W.Time" Width="60" IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="statusColumn" Binding="{Binding Status,UpdateSourceTrigger=LostFocus}" Header="S" Width="30">
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="MaxLength" Value="1"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn  Header="Name" MinWidth="150" SortMemberPath="Description">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Path=Description,  UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" MaxLength="500" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </StackPanel>
+            <GridSplitter x:Name="SplitterJobs" Grid.Column="3" Width="4" HorizontalAlignment="Right" Background="#FFF0F0F0" />
+
+            <!--TimeTracks panel-->
+            <StackPanel x:Name="StackPanelTimeTracks" Orientation="Vertical" Grid.Column="4" Margin="0,0,0,0">
+                <DockPanel Height="{Binding ActualHeight, ElementName=StackPanelJobs}" Width="Auto" LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <TextBlock Foreground="White" FontSize="24" Margin="8,0">Time tracks</TextBlock>
+                        <TextBlock Foreground="White" Margin="0,0" VerticalAlignment="Center">(</TextBlock>
+                        <Label Content="{Binding JobViewModel.SelectedJob.Description}" Margin="0,0,0,0" VerticalContentAlignment="Center" Background="{x:Null}" VerticalAlignment="Center"/>
+                        <TextBlock Foreground="White" Margin="0,0" VerticalAlignment="Center">)</TextBlock>
+                    </StackPanel>
+                    <Separator Margin="4,2,8,2" DockPanel.Dock="Top" />
+                    <StackPanel DockPanel.Dock="Top" Width="Auto" Height="40" Orientation="Horizontal" VerticalAlignment="Top" >
+                        <Button Command="{Binding Path=TimeTrackViewModel.CreateEmptyTimeTrackCommand}" CommandParameter="{Binding Path=JobViewModel.SelectedJob}" x:Name="btnCreateTimeTrack" Margin="2,2,2,2" VerticalAlignment="Top" Width="36" Height="36">
+                            <StackPanel>
+                                <Image Width="32" Height="32" Source=".\Resources\png32\025-plus.png" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <DataGrid VerticalContentAlignment="Stretch" 
+                              ItemsSource="{Binding TimeTrackViewModel.EditableTimeTracks,NotifyOnTargetUpdated=True,NotifyOnSourceUpdated=True}"
+                              AutoGenerateColumns="False"
+                              IsSynchronizedWithCurrentItem="True"
+                              CanUserAddRows="False"
+                              CellEditEnding="TimeTracksGrid_CellEditEnding"
+                              SelectionMode="Single"
+                              SelectionUnit="FullRow"
+                              HeadersVisibility="All"
+                              CanUserResizeRows="False"
+                              EnableRowVirtualization="False"
+                              EnableColumnVirtualization="False"
+                              x:Name="TimeTracksGrid"
+                              PreviewKeyDown="TimeTracksGrid_PreviewKeyDown"
+                              GridLinesVisibility="Vertical">
+                        <DataGrid.RowHeaderStyle>
+                            <Style TargetType="{x:Type DataGridRowHeader}">
+                                <Setter Property="Content" Value=">" />
+                                <!--<Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Path=Background}" />-->
+                            </Style>
+                        </DataGrid.RowHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="TimeTrackIDColumn" Binding="{Binding TimeTrackID}" Header="Id" Width="50" Visibility="Visible" IsReadOnly="True" />
+                            <DataGridTextColumn x:Name="WorkDateColumn" Binding="{Binding WorkDate, UpdateSourceTrigger=LostFocus, StringFormat=yyyy-MM-dd}" Header="Work date" Width="130"/>
+                            <DataGridTemplateColumn Header="Start time">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding StartTime, StringFormat=HH:mm:ss}"></TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding StartTime, Converter={StaticResource TimeConverter}}" ></TextBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="End time">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding EndTime, StringFormat=HH:mm:ss}"></TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding EndTime, Converter={StaticResource TimeConverter}}" ></TextBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn x:Name="workedTimeColumnTT" Binding="{Binding WorkedTime, Mode=OneWay}" Header="Worked" Width="120" IsReadOnly="False"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

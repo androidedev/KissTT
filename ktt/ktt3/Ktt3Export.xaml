@@ -1,0 +1,67 @@
+﻿<Window x:Class="ktt3.Ktt3Export"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Background="Black"
+        Loaded="Window_Loaded"
+        xmlns:local="clr-namespace:ktt3"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Title="Ktt3 Export" Height="572.85" Width="637">
+    <Grid Margin="0,0,0,-9">
+        <StackPanel Orientation="Vertical" Height="153" VerticalAlignment="Top" Margin="8,0" >
+            <Label Content="General options" Height="28" Background="Black" Foreground="White" FontSize="16" Margin="0,0,0,8"/>
+            <CheckBox x:Name="CheckBoxSkipEmptyJobs" IsChecked="{Binding SkipEmptyJobs}" Content="Skip jobs without worked time" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+            <CheckBox x:Name="CheckBoxSkipNotFinishedTimeTracks" IsChecked="{Binding SkipNotFinishedTimeTracks}" Content="Skip not finished TimeTracks" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+            <StackPanel Orientation="Horizontal" Height="31" Margin="8,2,8,0" VerticalAlignment="Top">
+                <Label Content="Selected project : " VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Black" HorizontalContentAlignment="Right" Width="142"/>
+                <Label Content="{Binding ProjectViewModel.SelectedProject.Name}" Height="26" Foreground="#FFFD0000" Margin="8,2,0,3" Width="443" VerticalAlignment="Center" Background="Black" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="8,2,8,509">
+                <Label Content="Export file name (txt) : " VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Black" HorizontalContentAlignment="Right" Width="142"/>
+                <TextBox Text="{Binding OutputFileName}" Width="443" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" Margin="8,0,0,0" ></TextBox>
+            </StackPanel>
+        </StackPanel>
+        <Separator Margin="10,153,10,0" Background="White" VerticalAlignment="Top" Height="10" />
+        <StackPanel Orientation="Horizontal" Height="112" VerticalAlignment="Top" Margin="8,168,8,0">
+            <StackPanel Orientation="Vertical" Margin="4,4,0,4" HorizontalAlignment="Left" Width="279">
+                <Label Content="Nice export options" Height="29" Background="Black" Foreground="White" FontSize="16" Margin="0,0,0,12"/>
+                <CheckBox x:Name="CheckBoxExportJobWorkedTime" IsChecked="{Binding ExportJobWorkedTime}" Content="Export jobs worked time" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+                <CheckBox x:Name="CheckBoxExportTimeTracksTimes" IsChecked="{Binding ExportTimeTracksTimes}" Content="Export TimeTracks times" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+                <CheckBox x:Name="CheckBoxExportAsHours" IsChecked="{Binding ExportAsHours}" Content="Export times as hours" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+                <CheckBox x:Name="CheckBoxExportEstimatedTimes" IsChecked="{Binding ExportEstimatedTimes}" Content="Export estimated times" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="4,4,0,4" HorizontalAlignment="Right" Width="323">
+                <Button CommandParameter="{Binding ProjectViewModel.Projects}" Content="Nice export all" Command="{Binding ExportNiceToFileCommand}" x:Name="ButtonExportToFile" Margin="2,50.4,0,2" VerticalAlignment="Top" Width="150" Height="36" HorizontalAlignment="Left" />
+                <Button CommandParameter="{Binding ProjectViewModel.SelectedProject}" Content="Nice export selected" Command="{Binding ExportNiceToFileCommand}" x:Name="ButtonExportSelectedToFile" Margin="8,50,0,2" VerticalAlignment="Top" Width="150" Height="36" HorizontalAlignment="Left" />
+            </StackPanel>
+        </StackPanel>
+        <Separator Margin="10,285,10,0" Background="White" VerticalAlignment="Top" Height="10" />
+        <StackPanel Orientation="Horizontal" Height="85" VerticalAlignment="Top" Margin="8,294,8,0">
+            <StackPanel Orientation="Vertical" Margin="4,4,0,4" HorizontalAlignment="Left" Width="279">
+                <Label Content="Data export options" Height="28" Background="Black" Foreground="White" FontSize="16" Margin="0,0,0,8"/>
+                <CheckBox x:Name="CheckBoxExportHeaders" IsChecked="{Binding ExportHeaders}" Content="Export header field names" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="4,4,0,4" HorizontalAlignment="Right" Width="324">
+                <Button CommandParameter="{Binding Path=ProjectViewModel.Projects}" Content="Export for import all" Command="{Binding Path=ExportDataToFileCommand}" x:Name="a" Margin="2,18,2,2" VerticalAlignment="Top" Width="150" Height="36" HorizontalAlignment="Left" >
+                </Button>
+                <Button CommandParameter="{Binding Path=ProjectViewModel.SelectedProject}" Content="Export for import selected" Command="{Binding Path=ExportDataToFileCommand}" x:Name="b" Margin="8,18,2,2" VerticalAlignment="Top" Width="150" Height="36" HorizontalAlignment="Left" >
+                </Button>
+            </StackPanel>
+        </StackPanel>
+        <Separator Margin="10,379,10,0" Background="White" VerticalAlignment="Top" Height="10" />
+        <StackPanel Orientation="Horizontal" Height="66" VerticalAlignment="Top" Margin="8,394,8,0">
+            <StackPanel Orientation="Vertical" Margin="4,4,0,4" HorizontalAlignment="Left" Width="279">
+                <Label Content="Import options" Height="28" Background="Black" Foreground="White" FontSize="16" Margin="0,0,0,8"/>
+                <CheckBox x:Name="CheckBoxDeleteBeforeImport" IsChecked="{Binding DeleteBeforeInport}" Content="Delete existing projects before import" Foreground="White" FontSize="12" Margin="0,0,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="4,4,0,10" HorizontalAlignment="Right" Width="156">
+                <Button Command="{Binding ImportDataCommand}" Content="Import" x:Name="ButtonImpot" Margin="3,18,3,2" VerticalAlignment="Top" Width="150" Height="35.6" VerticalContentAlignment="Top" />
+            </StackPanel>
+        </StackPanel>
+        <Separator Margin="10,465,10,0" Background="White" VerticalAlignment="Top" Height="10" />
+        <Button Content="Close" Margin="0,0,10,25" VerticalAlignment="Bottom" Width="150" Height="36" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Click="Button_Click" />
+    </Grid>
+</Window>
