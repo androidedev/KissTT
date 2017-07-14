@@ -58,7 +58,7 @@ Project/Task Manager with Pomodoro (sort of) timer
 <table>
     <tr>
         <td>
-            <img alt="ktt time tracker usual" src="docs/screenshots/ktt-01.png">
+            <img alt="ktt time tracker usual" src="ktt/ktt3/docs/screenshots/ktt-01.png">
         </td>
     </tr>
 </table>
@@ -68,7 +68,7 @@ Project/Task Manager with Pomodoro (sort of) timer
 <table>
     <tr>
         <td>
-            <img alt="ktt time tracker import export" src="docs/screenshots/ktt-02.png">
+            <img alt="ktt time tracker import export" src="ktt/ktt3/docs/screenshots/ktt-02.png">
         </td>
     </tr>
 </table>
@@ -79,7 +79,7 @@ Project/Task Manager with Pomodoro (sort of) timer
 <table>
     <tr>
         <td>
-            <img alt="ktt time tracker all open" src="docs/screenshots/ktt-03.png">
+            <img alt="ktt time tracker all open" src="ktt/ktt3/docs/screenshots/ktt-03.png">
         </td>
     </tr>
 </table>
@@ -90,10 +90,10 @@ Project/Task Manager with Pomodoro (sort of) timer
 <table>
     <tr>
         <td>
-            <img alt="ktt time tracker export nice" src="docs/screenshots/ktt-04.png">
+            <img alt="ktt time tracker export nice" src="ktt/ktt3/docs/screenshots/ktt-04.png">
         </td>
         <td>
-            <img alt="ktt time tracker export data" src="docs/screenshots/ktt-05.png">
+            <img alt="ktt time tracker export data" src="ktt/ktt3/docs/screenshots/ktt-05.png">
         </td>
     </tr>
 </table>
